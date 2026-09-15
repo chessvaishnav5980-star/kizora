@@ -113,6 +113,8 @@ body { font-family: var(--font-body); background: var(--bg-deepest); }
 .rail-scroll { display: flex; flex-direction: column; gap: 8px; overflow-y: auto; width: 100%; align-items: center; padding-bottom: 8px; }
 .server-icon { position: relative; width: 48px; height: 48px; border-radius: 16px; background: var(--bg-elevated); border: none; color: var(--text-primary); display: flex; align-items: center; justify-content: center; font-size: 20px; cursor: pointer; transition: border-radius 0.15s ease, background 0.15s ease, color 0.15s ease, transform 0.15s ease; flex-shrink: 0; animation: popIn 0.3s cubic-bezier(0.34,1.56,0.64,1) both; }
 .server-icon.dim { opacity: 0.5; }
+.server-icon-img { width: 100%; height: 100%; object-fit: cover; border-radius: inherit; display: block; }
+.server-icon { overflow: hidden; }
 .server-icon-wrap { position: relative; }
 .archived-toggle-icon { color: var(--text-muted); }
 .rail-context-menu { position: absolute; left: 56px; top: 0; z-index: 50; background: var(--bg-elevated); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); box-shadow: 0 8px 24px rgba(0,0,0,0.3); padding: 4px; min-width: 160px; animation: popIn 0.15s ease both; }
@@ -134,6 +136,10 @@ body { font-family: var(--font-body); background: var(--bg-deepest); }
 .owner-badge { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; color: var(--accent); background: var(--accent-soft); padding: 3px 8px; border-radius: 999px; font-family: var(--font-body); }
 .owner-badge-inline { margin-left: 6px; padding: 1px 6px; font-size: 9px; vertical-align: middle; }
 .server-delete-btn { margin-left: auto; color: var(--text-muted); }
+.server-settings-btn { margin-left: auto; color: var(--text-muted); }
+.server-settings-btn + .server-delete-btn { margin-left: 0; }
+.server-settings-btn:hover { color: var(--text-primary); }
+.server-header-icon-img { width: 26px; height: 26px; border-radius: 8px; object-fit: cover; flex-shrink: 0; }
 .server-delete-btn:hover { color: #F2555A; }
 .server-header-emoji { font-size: 18px; }
 .server-header-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -516,6 +522,14 @@ body { font-family: var(--font-body); background: var(--bg-deepest); }
 .accent-swatch { width: 34px; height: 34px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #fff; transition: transform 0.1s; }
 .server-icon-preview-row { display: flex; align-items: center; gap: 12px; }
 .server-icon-preview { width: 52px; height: 52px; border-radius: 16px; background: var(--accent-bg); color: #1a1508; font-family: var(--font-display); font-weight: 800; font-size: 22px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.server-icon-edit-btn { position: relative; width: 64px; height: 64px; border-radius: 20px; border: none; background: transparent; padding: 0; cursor: pointer; flex-shrink: 0; overflow: visible; }
+.server-icon-edit-btn:disabled { cursor: not-allowed; opacity: 0.75; }
+.server-icon-edit-btn img { width: 64px; height: 64px; border-radius: 20px; object-fit: cover; display: block; }
+.server-icon-edit-btn .server-icon-preview { width: 64px; height: 64px; border-radius: 20px; font-size: 26px; }
+.server-icon-edit-badge { position: absolute; bottom: -2px; right: -2px; width: 22px; height: 22px; border-radius: 50%; background: var(--accent-bg); border: 2px solid var(--bg-elevated); color: #1a1508; display: flex; align-items: center; justify-content: center; }
+.role-list { display: flex; flex-direction: column; gap: 4px; max-height: 220px; overflow-y: auto; }
+.role-row { display: flex; align-items: center; gap: 10px; padding: 6px 4px; }
+.role-row-name { flex: 1; font-size: 13.5px; color: var(--text-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .custom-gradient-builder input[type="color"] { width: 26px; height: 26px; padding: 0; border: 1.5px solid var(--border-subtle); border-radius: 50%; cursor: pointer; background: transparent; overflow: hidden; }
 .custom-gradient-builder input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; border-radius: 50%; }
 .custom-gradient-builder-full { width: 100%; display: flex; flex-direction: column; gap: 10px; padding: 10px; background: var(--bg-deepest); border-radius: var(--radius-sm); margin-top: 4px; }
@@ -1036,6 +1050,7 @@ function IconMic(props) { return <svg width={props.size||14} height={props.size|
 function IconVideo(props) { return <svg width={props.size||14} height={props.size||14} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>; }
 function IconPlay(props) { return <svg width={props.size||14} height={props.size||14} viewBox="0 0 24 24" fill="currentColor"><polygon points="6 3 20 12 6 21 6 3"/></svg>; }
 function IconPause(props) { return <svg width={props.size||14} height={props.size||14} viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>; }
+function IconReels(props) { return <svg width={props.size||14} height={props.size||14} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="4"/><line x1="8.5" y1="2.2" x2="5" y2="9"/><line x1="15.5" y1="2.2" x2="12" y2="9"/><line x1="2" y1="9" x2="22" y2="9"/><polygon points="10.5 12.6 15.5 15.5 10.5 18.4" fill="currentColor" stroke="none"/></svg>; }
 function IconPhone(props) { return <svg width={props.size||14} height={props.size||14} viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79a15.05 15.05 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 1.01-.24c1.12.37 2.33.57 3.58.57a1 1 0 0 1 1 1V20a1 1 0 0 1-1 1C10.61 21 3 13.39 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.46.57 3.58a1 1 0 0 1-.25 1.01l-2.2 2.2z"/></svg>; }
 function IconPhoneOff(props) { return <svg width={props.size||14} height={props.size||14} viewBox="0 0 24 24" fill="currentColor"><path d="M10.68 13.31a15.05 15.05 0 0 0 2.99 2.24l1.4-1.4a1 1 0 0 1 1.01-.24c.99.33 2.05.52 3.14.56a1 1 0 0 1 .96 1v3.03a1 1 0 0 1-1 1c-2.1-.09-4.13-.53-6-1.28M5.14 5.14A15 15 0 0 0 3 4a1 1 0 0 0-1 1c0 9.39 7.61 17 17 17a1 1 0 0 0 1-1v-3.03a1 1 0 0 0-.96-1 12.3 12.3 0 0 1-2.03-.36" stroke="none"/><line x1="2" y1="2" x2="22" y2="22" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>; }
 function IconSmile(props) { return <svg width={props.size||18} height={props.size||18} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>; }
@@ -1234,7 +1249,7 @@ function ServerRail(props) {
         <IconAt size={20} />
       </button>
       <button type="button" className="server-icon home-btn" onClick={props.onOpenReels} title="Reels">
-        <IconVideo size={20} />
+        <IconReels size={20} />
       </button>
       <div className="rail-divider" />
       <div className="rail-scroll">
@@ -1250,7 +1265,7 @@ function ServerRail(props) {
                 title={s.name}
               >
                 {active && <span className="rail-pill" />}
-                <span>{s.emoji || s.name.slice(0, 1).toUpperCase()}</span>
+                {s.icon_url ? <img src={s.icon_url} alt={s.name} className="server-icon-img" /> : <span>{s.emoji || s.name.slice(0, 1).toUpperCase()}</span>}
               </button>
               {contextMenuFor === s.id && (
                 <div className="rail-context-menu" onClick={function (e) { e.stopPropagation(); }}>
@@ -1271,7 +1286,7 @@ function ServerRail(props) {
           return (
             <div key={s.id} className="server-icon-wrap">
               <button type="button" className="server-icon dim" title={s.name + ' (archived)'} onClick={function () { props.onSelect(s.id); }}>
-                <span>{s.emoji || s.name.slice(0, 1).toUpperCase()}</span>
+                {s.icon_url ? <img src={s.icon_url} alt={s.name} className="server-icon-img" /> : <span>{s.emoji || s.name.slice(0, 1).toUpperCase()}</span>}
               </button>
               <div className="rail-context-menu rail-context-static">
                 <button type="button" onClick={function () { props.onArchiveServer(s.id); }}>
@@ -1369,11 +1384,16 @@ function ChannelSidebar(props) {
   return (
     <div className="channel-sidebar">
       <div className="server-header">
-        <span className="server-header-emoji">{props.server.emoji}</span>
+        {props.server.icon_url
+          ? <img src={props.server.icon_url} alt={props.server.name} className="server-header-icon-img" />
+          : <span className="server-header-emoji">{props.server.emoji}</span>}
         <span className="server-header-name">{props.server.name}</span>
         {props.profile.id === props.server.owner_id && (
           <span className="owner-badge" title="You own this server">Owner</span>
         )}
+        <button type="button" className="icon-btn server-settings-btn" title="Server settings" onClick={props.onOpenServerSettings}>
+          <IconSettings size={14} />
+        </button>
         {props.profile.id === props.server.owner_id && (
           <button type="button" className="icon-btn server-delete-btn" title="Delete server" onClick={props.onDeleteServer}>
             <IconTrash size={14} />
@@ -1617,7 +1637,7 @@ function ChatArea(props) {
                       }}
                     />
                   ) : (
-                    <React.Fragment>
+                    <Fragment>
                       {m.content && <div className="message-content">{parseFormatting(m.content)}{m.edited_at && grouped && <span className="message-edited-tag">(edited)</span>}</div>}
                       {m.attachment_url && (
                         <div className="message-attachment">
@@ -1636,7 +1656,7 @@ function ChatArea(props) {
                           )}
                         </div>
                       )}
-                    </React.Fragment>
+                    </Fragment>
                   )}
                 </div>
                 {!isEditing && (
@@ -1691,7 +1711,7 @@ function ChatArea(props) {
             <button type="button" className="send-btn" title="Send" onClick={stopRecording}><IconSend size={16} /></button>
           </div>
         ) : (
-          <React.Fragment>
+          <Fragment>
             <button className="icon-btn attach-btn" type="button" title="Attach a file" onClick={function () { fileInputRef.current && fileInputRef.current.click(); }}>
               <IconPaperclip size={18} />
             </button>
@@ -1706,7 +1726,7 @@ function ChatArea(props) {
                 <IconMic size={18} />
               </button>
             )}
-          </React.Fragment>
+          </Fragment>
         )}
       </div>
     </div>
@@ -1890,7 +1910,7 @@ function ReelsView(props) {
     <div className="reels-overlay">
       <div className="reels-header">
         <div className="reels-header-left">
-          <IconVideo size={20} />
+          <IconReels size={20} />
           <span>Reels</span>
         </div>
         <div className="reels-header-tabs">
@@ -1975,7 +1995,7 @@ function ReelUploadModal(props) {
     <ModalShell title="Upload a reel" onClose={props.onClose}>
       <form onSubmit={handleSubmit} className="create-server-form">
         <button type="button" className="reel-picker-btn" onClick={function () { fileInputRef.current && fileInputRef.current.click(); }}>
-          {previewUrl ? <video src={previewUrl} className="reel-preview-video" muted /> : <React.Fragment><IconVideo size={22} /><span>Choose a video (max 1 minute)</span></React.Fragment>}
+          {previewUrl ? <video src={previewUrl} className="reel-preview-video" muted /> : <Fragment><IconVideo size={22} /><span>Choose a video (max 1 minute)</span></Fragment>}
         </button>
         <input ref={fileInputRef} type="file" accept="video/mp4,video/webm,video/quicktime" style={{ display: 'none' }} onChange={handlePick} />
         <label className="field">
@@ -2062,6 +2082,118 @@ function ActiveCallModal(props) {
   );
 }
 
+function ServerSettingsModal(props) {
+  const server = props.server;
+  const [iconPreview, setIconPreview] = useState(server.icon_url || null);
+  const [iconFile, setIconFile] = useState(null);
+  const [permission, setPermission] = useState(server.icon_permission || 'admins');
+  const [error, setError] = useState('');
+  const [busy, setBusy] = useState(false);
+  const fileInputRef = useRef(null);
+  const isOwner = props.myId === server.owner_id;
+
+  function handlePick(e) {
+    const f = e.target.files && e.target.files[0];
+    if (!f) return;
+    if (f.size > 5 * 1024 * 1024) { setError('Icon must be under 5MB.'); return; }
+    setError('');
+    setIconFile(f);
+    const reader = new FileReader();
+    reader.onload = function () { setIconPreview(reader.result); };
+    reader.readAsDataURL(f);
+  }
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setBusy(true);
+    setError('');
+    try {
+      await props.onSave({ iconFile: iconFile, permission: isOwner ? permission : null });
+      props.onClose();
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  const fallbackLetter = (server.name || '#').slice(0, 1).toUpperCase();
+
+  return (
+    <ModalShell title="Server settings" onClose={props.onClose}>
+      <form onSubmit={handleSubmit} className="create-server-form">
+        <div className="server-icon-preview-row">
+          <button
+            type="button"
+            className="server-icon-edit-btn"
+            onClick={function () { props.canEditIcon && fileInputRef.current && fileInputRef.current.click(); }}
+            disabled={!props.canEditIcon}
+            title={props.canEditIcon ? 'Change server icon' : 'You do not have permission to change this icon'}
+          >
+            {iconPreview ? <img src={iconPreview} alt="Server icon" /> : <span className="server-icon-preview">{fallbackLetter}</span>}
+            {props.canEditIcon && <span className="server-icon-edit-badge"><IconCamera size={12} /></span>}
+          </button>
+          <span className="avatar-upload-hint">
+            {props.canEditIcon
+              ? 'Click to upload a new server icon. PNG, JPG, GIF or WEBP, up to 5MB.'
+              : 'Only ' + (server.icon_permission === 'owner' ? 'the owner' : 'admins') + ' can change this server\u2019s icon.'}
+          </span>
+        </div>
+        <input ref={fileInputRef} type="file" accept="image/png,image/jpeg,image/gif,image/webp" style={{ display: 'none' }} onChange={handlePick} />
+
+        {isOwner && (
+          <label className="field">
+            <span>Who can change the server icon</span>
+            <div className="theme-toggle-row">
+              <button type="button" className={'theme-opt ' + (permission === 'owner' ? 'active' : '')} onClick={function () { setPermission('owner'); }}>Owner only</button>
+              <button type="button" className={'theme-opt ' + (permission === 'admins' ? 'active' : '')} onClick={function () { setPermission('admins'); }}>Admins</button>
+              <button type="button" className={'theme-opt ' + (permission === 'everyone' ? 'active' : '')} onClick={function () { setPermission('everyone'); }}>Everyone</button>
+            </div>
+          </label>
+        )}
+
+        {isOwner && (
+          <div>
+            <div className="settings-section-label">Members &amp; roles</div>
+            <div className="role-list">
+              {props.members.map(function (m) {
+                if (m.user_id === server.owner_id) {
+                  return (
+                    <div className="role-row" key={m.user_id}>
+                      <Avatar username={m.profiles && m.profiles.username} avatarUrl={m.profiles && m.profiles.avatar_url} size={26} />
+                      <span className="role-row-name">{m.profiles && m.profiles.username}</span>
+                      <span className="owner-badge owner-badge-inline">Owner</span>
+                    </div>
+                  );
+                }
+                return (
+                  <div className="role-row" key={m.user_id}>
+                    <Avatar username={m.profiles && m.profiles.username} avatarUrl={m.profiles && m.profiles.avatar_url} size={26} />
+                    <span className="role-row-name">{m.profiles && m.profiles.username}</span>
+                    <select
+                      className="settings-select"
+                      value={m.role || 'member'}
+                      onChange={function (e) { props.onChangeRole(m.user_id, e.target.value); }}
+                    >
+                      <option value="member">Member</option>
+                      <option value="admin">Admin</option>
+                    </select>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {error && <div className="auth-error">{error}</div>}
+        <button className="btn-primary" type="submit" disabled={busy || (!iconFile && !isOwner)}>
+          {busy ? <Spinner size={16} /> : 'Save changes'}
+        </button>
+      </form>
+    </ModalShell>
+  );
+}
+
 function AddServerModal(props) {
   const [tab, setTab] = useState('join');
   const [name, setName] = useState('');
@@ -2143,7 +2275,6 @@ function AddChannelModal(props) {
   );
 }
 
-const STATUS_EMOJIS = ['😀', '🎮', '💻', '📚', '🎵', '☕', '🌙', '💤', '🔥', '❤️', '🚀', '✨', '🏖️', '🎧', '🍕', ''];
 
 function CustomGradientBuilder(props) {
   const initialA = (props.accentPreset && props.accentPreset.colorA) || '#5865F2';
@@ -2787,6 +2918,7 @@ function App() {
   const [showForwardFor, setShowForwardFor] = useState(null);
   const [showStarred, setShowStarred] = useState(false);
   const [showReels, setShowReels] = useState(false);
+  const [showServerSettings, setShowServerSettings] = useState(false);
   const [incomingCall, setIncomingCall] = useState(null);
   const [activeCall, setActiveCall] = useState(null);
   const [micMuted, setMicMuted] = useState(false);
@@ -3524,7 +3656,7 @@ function App() {
     let cancelled = false;
     async function loadMembers() {
       try {
-        const data = await sbFetch('/rest/v1/server_members?server_id=eq.' + currentServerId + '&select=user_id,profiles(username,last_seen,avatar_url,status_text,status_emoji)', { token: session.access_token });
+        const data = await sbFetch('/rest/v1/server_members?server_id=eq.' + currentServerId + '&select=user_id,role,profiles!server_members_user_id_fkey(username,last_seen,avatar_url,status_text,status_emoji)', { token: session.access_token });
         if (!cancelled) setMembers(data || []);
       } catch (e) { /* transient */ }
     }
@@ -3695,6 +3827,38 @@ function App() {
     }
   }
 
+  async function handleSaveServerSettings(updates) {
+    if (!currentServer) return;
+    const patch = {};
+    if (updates.iconFile) {
+      const ext = (updates.iconFile.name.split('.').pop() || 'png').toLowerCase();
+      const path = currentServer.id + '/icon-' + randomId() + '.' + ext;
+      patch.icon_url = await uploadToStorage('server-icons', path, updates.iconFile, session.access_token);
+    }
+    if (updates.permission) patch.icon_permission = updates.permission;
+    if (Object.keys(patch).length === 0) return;
+    const updated = await sbFetch('/rest/v1/servers?id=eq.' + currentServer.id, {
+      method: 'PATCH', token: session.access_token, body: patch,
+      extraHeaders: { Prefer: 'return=representation' },
+    });
+    if (updated && updated[0]) {
+      setServers(function (prev) { return prev.map(function (s) { return s.id === updated[0].id ? updated[0] : s; }); });
+    }
+  }
+
+  async function handleChangeMemberRole(userId, role) {
+    if (!currentServer) return;
+    try {
+      await sbFetch('/rest/v1/server_members?server_id=eq.' + currentServer.id + '&user_id=eq.' + userId, {
+        method: 'PATCH', token: session.access_token, body: { role: role },
+        extraHeaders: { Prefer: 'return=minimal' },
+      });
+      setMembers(function (prev) { return prev.map(function (m) { return m.user_id === userId ? Object.assign({}, m, { role: role }) : m; }); });
+    } catch (e) {
+      setFatalError(e.message);
+    }
+  }
+
   async function handleDeleteServer() {
     if (!currentServer) return;
     const ok = window.confirm('Delete "' + currentServer.name + '" for everyone? This cannot be undone.');
@@ -3809,7 +3973,7 @@ function App() {
         {isDmView ? (
           <DmSidebar threads={dmThreads} myId={profile.id} currentThreadId={currentDmThreadId} onSelectThread={setCurrentDmThreadId} profile={profile} onLogout={handleLogout} onOpenSettings={function () { setShowSettings(true); }} myStatus={statusesByUser[profile.id]} onViewStatus={setViewingStatus} onAddStatus={function () { setShowStatusUpload(true); }} archivedDmIds={archivedDmIds} onToggleArchive={handleToggleArchiveDm} />
         ) : (
-          <ChannelSidebar server={currentServer} channels={channels} currentChannelId={currentChannelId} onSelectChannel={setCurrentChannelId} onAddChannel={function () { setShowAddChannel(true); }} profile={profile} onLogout={handleLogout} onOpenSettings={function () { setShowSettings(true); }} myStatus={statusesByUser[profile.id]} onViewStatus={setViewingStatus} onAddStatus={function () { setShowStatusUpload(true); }} onDeleteServer={handleDeleteServer} />
+          <ChannelSidebar server={currentServer} channels={channels} currentChannelId={currentChannelId} onSelectChannel={setCurrentChannelId} onAddChannel={function () { setShowAddChannel(true); }} profile={profile} onLogout={handleLogout} onOpenSettings={function () { setShowSettings(true); }} myStatus={statusesByUser[profile.id]} onViewStatus={setViewingStatus} onAddStatus={function () { setShowStatusUpload(true); }} onDeleteServer={handleDeleteServer} onOpenServerSettings={function () { setShowServerSettings(true); }} />
         )}
         <ChatArea
           {...chatProps}
@@ -3890,6 +4054,24 @@ function App() {
             onToggleCam={toggleCam}
             onHangup={hangUpCall}
             onCancel={cancelOutgoingCall}
+          />
+        )}
+        {showServerSettings && currentServer && (
+          <ServerSettingsModal
+            server={currentServer}
+            myId={profile.id}
+            members={members}
+            canEditIcon={(function () {
+              if (profile.id === currentServer.owner_id) return true;
+              const perm = currentServer.icon_permission || 'admins';
+              if (perm === 'owner') return false;
+              if (perm === 'everyone') return true;
+              const me = members.find(function (m) { return m.user_id === profile.id; });
+              return !!(me && me.role === 'admin');
+            })()}
+            onSave={handleSaveServerSettings}
+            onChangeRole={handleChangeMemberRole}
+            onClose={function () { setShowServerSettings(false); }}
           />
         )}
         {fatalError && <div className="toast-error" onClick={function () { setFatalError(''); }}>{fatalError}</div>}
