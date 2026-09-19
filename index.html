@@ -79,6 +79,7 @@ body { font-family: var(--font-body); background: var(--bg-deepest); }
 .app[data-bg="space"] .channel-sidebar, .app[data-bg="custom"] .channel-sidebar { background: color-mix(in srgb, var(--bg-sidebar) 55%, transparent); backdrop-filter: blur(6px); }
 .app[data-bg="space"] .member-sidebar, .app[data-bg="custom"] .member-sidebar { background: color-mix(in srgb, var(--bg-sidebar) 55%, transparent); backdrop-filter: blur(6px); }
 .app[data-bg="space"] .chat-area, .app[data-bg="custom"] .chat-area { background: color-mix(in srgb, var(--bg-chat) 68%, transparent); }
+.app[data-bg="space"] .chat-header, .app[data-bg="custom"] .chat-header { background: color-mix(in srgb, var(--bg-chat) 88%, transparent); backdrop-filter: blur(6px); }
 .bg-option-row { display: flex; gap: 10px; flex-wrap: wrap; }
 .bg-option-card { width: 76px; height: 54px; border-radius: 10px; border: 2px solid var(--border-subtle); cursor: pointer; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 10px; font-weight: 700; }
 .bg-option-card.active { border-color: var(--accent); }
@@ -163,7 +164,7 @@ body { font-family: var(--font-body); background: var(--bg-deepest); }
 .chat-area.empty-state svg { animation: popIn 0.4s cubic-bezier(0.34,1.56,0.64,1) both; }
 .chat-area.empty-state h2 { font-family: var(--font-display); color: var(--text-primary); margin: 8px 0 0; }
 .chat-area.empty-state p { margin: 0; font-size: 14px; }
-.chat-header { height: 56px; flex-shrink: 0; display: flex; align-items: center; gap: 8px; padding: 0 16px; border-bottom: 1px solid var(--border-subtle); font-weight: 600; color: var(--text-primary); }
+.chat-header { height: 56px; flex-shrink: 0; display: flex; align-items: center; gap: 8px; padding: 0 16px; border-bottom: 1px solid var(--border-subtle); font-weight: 600; color: var(--text-primary); background: var(--bg-chat); position: relative; z-index: 2; }
 .chat-header span:nth-of-type(1) { flex: 1; }
 .members-toggle { margin-left: auto; }
 .message-list { flex: 1; overflow-y: auto; padding: 16px 20px 8px; display: flex; flex-direction: column; }
@@ -332,6 +333,42 @@ body { font-family: var(--font-body); background: var(--bg-deepest); }
 .landing-hero-actions { display: flex; flex-direction: column; align-items: center; gap: 14px; }
 .landing-cta { width: auto; padding: 14px 30px; font-size: 15.5px; }
 @media (max-width: 560px) { .landing-hero h1 { font-size: 34px; } .landing-nav { padding: 16px 18px; } }
+.landing-hero-badge { display: inline-block; padding: 6px 16px; border-radius: 999px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: rgba(255,255,255,0.75); font-size: 12.5px; font-weight: 600; margin-bottom: 18px; animation: floatBadge 3s ease-in-out infinite; }
+@keyframes floatBadge { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+.landing-shimmer { background: linear-gradient(90deg, #7C8CFF, #FFAEE8, #7C8CFF); background-size: 200% auto; -webkit-background-clip: text; background-clip: text; color: transparent; animation: shimmerText 3.5s linear infinite; }
+@keyframes shimmerText { 0% { background-position: 0% center; } 100% { background-position: 200% center; } }
+.landing-preview-wrap { position: relative; z-index: 2; display: flex; justify-content: center; padding: 10px 24px 70px; }
+.landing-preview-window { width: 100%; max-width: 480px; background: rgba(20,19,31,0.75); backdrop-filter: blur(14px); border: 1px solid rgba(255,255,255,0.12); border-radius: 16px; overflow: hidden; box-shadow: 0 30px 70px rgba(0,0,0,0.5); animation: previewFloat 5s ease-in-out infinite; }
+@keyframes previewFloat { 0%,100% { transform: translateY(0) rotate(-0.4deg); } 50% { transform: translateY(-10px) rotate(0.4deg); } }
+.landing-preview-titlebar { display: flex; gap: 6px; padding: 10px 12px; background: rgba(255,255,255,0.04); }
+.landing-preview-dot { width: 9px; height: 9px; border-radius: 50%; }
+.landing-preview-dot.red { background: #F2555A; } .landing-preview-dot.yellow { background: #F2B458; } .landing-preview-dot.green { background: #43D67D; }
+.landing-preview-body { display: flex; }
+.landing-preview-sidebar { display: flex; flex-direction: column; gap: 10px; padding: 14px 10px; background: rgba(0,0,0,0.18); }
+.landing-preview-avatar { width: 30px; height: 30px; border-radius: 10px; }
+.landing-preview-avatar.blurple { background: linear-gradient(135deg, #5865F2, #9C87F5); }
+.landing-preview-avatar.pink { background: linear-gradient(135deg, #F28ED0, #FFAEE8); }
+.landing-preview-avatar.green { background: linear-gradient(135deg, #1ABC9C, #43D67D); }
+.landing-preview-chat { flex: 1; padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+.landing-preview-msg { max-width: 78%; padding: 9px 13px; border-radius: 14px; font-size: 13px; color: rgba(255,255,255,0.9); animation: msgPop 0.4s ease both; }
+.landing-preview-msg.them { align-self: flex-start; background: rgba(255,255,255,0.08); border-bottom-left-radius: 4px; animation-delay: 0.2s; }
+.landing-preview-msg.me { align-self: flex-end; background: linear-gradient(135deg, #5865F2, #9C87F5); border-bottom-right-radius: 4px; animation-delay: 0.6s; }
+.landing-preview-msg-author { display: block; font-size: 11px; font-weight: 700; color: #B7A6FF; margin-bottom: 2px; }
+@keyframes msgPop { from { opacity: 0; transform: translateY(8px) scale(0.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
+.landing-preview-msg.typing { display: flex; gap: 4px; align-items: center; animation-delay: 1s; }
+.landing-preview-dot-typing { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.5); animation: dotBounce 1.2s infinite; }
+.landing-preview-dot-typing:nth-child(2) { animation-delay: 0.15s; } .landing-preview-dot-typing:nth-child(3) { animation-delay: 0.3s; }
+.landing-features { position: relative; z-index: 2; max-width: 980px; margin: 0 auto; padding: 20px 24px 80px; text-align: center; }
+.landing-features h2 { font-family: var(--font-display); font-size: 30px; color: #fff; margin: 0 0 34px; }
+.landing-features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 18px; }
+.landing-feature-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 24px 20px; text-align: left; animation: featureIn 0.5s ease both; transition: transform 0.2s, background 0.2s; }
+.landing-feature-card:hover { transform: translateY(-4px); background: rgba(255,255,255,0.08); }
+@keyframes featureIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+.landing-feature-icon { width: 44px; height: 44px; border-radius: 12px; background: linear-gradient(135deg, #5865F2, #F28ED0); display: flex; align-items: center; justify-content: center; color: #fff; margin-bottom: 14px; }
+.landing-feature-card h3 { font-family: var(--font-display); font-size: 16px; color: #fff; margin: 0 0 6px; }
+.landing-feature-card p { font-size: 13px; color: rgba(255,255,255,0.6); margin: 0; line-height: 1.5; }
+.landing-footer-cta { position: relative; z-index: 2; text-align: center; padding: 40px 24px 90px; }
+.landing-footer-cta h2 { font-family: var(--font-display); font-size: 28px; color: #fff; margin: 0 0 22px; }
 .loading-screen { display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 4px; position: relative; overflow: hidden; }
 .loading-screen .logo-svg { animation: none; }
 .loading-blob { position: absolute; border-radius: 50%; filter: blur(60px); opacity: 0.35; }
@@ -438,6 +475,11 @@ body { font-family: var(--font-body); background: var(--bg-deepest); }
 .menu-panel button { display: flex; align-items: center; gap: 10px; width: 100%; padding: 9px 8px; background: transparent; border: none; color: var(--text-secondary); font-size: 13.5px; font-weight: 600; cursor: pointer; border-radius: 8px; font-family: var(--font-body); text-align: left; }
 .menu-panel button:hover { background: var(--bg-hover); color: var(--text-primary); }
 .menu-panel button.danger:hover { color: #F2555A; }
+.build-tag-footer { text-align: center; font-size: 10.5px; color: var(--text-muted); opacity: 0.6; margin-top: 4px; }
+.mini-profile-overlay { position: fixed; inset: 0; z-index: 260; background: rgba(0,0,0,0.45); display: flex; align-items: center; justify-content: center; }
+.mini-profile-card { position: relative; display: flex; flex-direction: column; align-items: center; gap: 6px; background: var(--bg-elevated); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 30px 34px; animation: popIn 0.18s ease both; }
+.mini-profile-card h4 { margin: 10px 0 0; font-family: var(--font-display); font-size: 17px; color: var(--text-primary); }
+.mini-profile-card > .icon-btn { position: absolute; top: 10px; right: 10px; }
 .call-overlay { position: fixed; inset: 0; z-index: 400; background: rgba(6,6,12,0.88); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; animation: modalIn 0.2s ease both; }
 .incoming-call-card, .active-call-card { display: flex; flex-direction: column; align-items: center; gap: 6px; background: var(--bg-elevated); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 32px 36px; min-width: 300px; position: relative; }
 .incoming-call-card h3, .active-call-card h3 { font-family: var(--font-display); font-size: 21px; margin: 12px 0 0; color: var(--text-primary); }
@@ -460,6 +502,10 @@ body { font-family: var(--font-body); background: var(--bg-deepest); }
 .call-action-btn:hover { color: var(--text-primary); background: var(--bg-hover); }
 .chat-header-calls { display: flex; align-items: center; gap: 4px; margin-left: auto; }
 .chat-header-calls + .members-toggle { margin-left: 4px; }
+.chat-header-search-btn { margin-left: auto; }
+.chat-header-search { display: flex; align-items: center; gap: 8px; flex: 1; margin-left: 12px; background: var(--bg-deepest); border: 1px solid var(--border-subtle); border-radius: 999px; padding: 6px 12px; color: var(--text-muted); }
+.chat-header-search input { flex: 1; background: transparent; border: none; outline: none; color: var(--text-primary); font-size: 13.5px; font-family: var(--font-body); }
+.search-no-results { text-align: center; margin-top: 30px; }
 .message-row:hover .message-actions { display: flex; }
 .message-actions button { width: 28px; height: 28px; border: none; background: transparent; color: var(--text-secondary); display: flex; align-items: center; justify-content: center; cursor: pointer; }
 .message-actions button:hover { background: var(--bg-hover); color: var(--text-primary); }
@@ -568,6 +614,7 @@ body { font-family: var(--font-body); background: var(--bg-deepest); }
 .gradient-dir-btn.active { border-color: var(--accent); color: var(--text-primary); }
 .gradient-dir-swatch { width: 100%; height: 22px; border-radius: 6px; display: block; }
 .avatar-wrap.has-status { box-shadow: 0 0 0 2.5px var(--bg-sidebar), 0 0 0 4.5px var(--accent); border-radius: 50%; cursor: pointer; }
+.avatar-wrap.clickable { cursor: pointer; }
 .status-add-btn { position: absolute; bottom: -2px; right: -2px; width: 18px; height: 18px; border-radius: 50%; background: var(--accent-bg); border: 2px solid var(--bg-sidebar); display: flex; align-items: center; justify-content: center; color: #1a1508; cursor: pointer; }
 .user-panel-avatar-wrap { position: relative; flex-shrink: 0; }
 .status-viewer-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 200; display: flex; align-items: center; justify-content: center; animation: modalIn 0.2s ease both; }
@@ -618,6 +665,7 @@ body { font-family: var(--font-body); background: var(--bg-deepest); }
 const { useState, useEffect, useRef, useCallback, Fragment } = React;
 
 /* ============================== CONFIG ============================== */
+const BUILD_TAG = 'build-2026-09-19-tabs-2';
 const SUPABASE_URL = 'https://cinbcsujbruelhlbepcv.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNpbmJjc3VqYnJ1ZWxobGJlcGN2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkxMjc2ODUsImV4cCI6MjEwNDcwMzY4NX0.n7I_s-Zu4QRs9536xPOR4QSpp2T2EDYTibwgVQAj_u8';
 const realtimeClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -998,12 +1046,12 @@ function Avatar(props) {
   const online = props.online;
   const avatarUrl = props.avatarUrl;
   function handleClick(e) {
-    if (!props.hasStatus) return;
+    if (!props.hasStatus && !props.clickable) return;
     e.stopPropagation();
     props.onAvatarClick && props.onAvatarClick();
   }
   return (
-    <div className={'avatar-wrap' + (props.hasStatus ? ' has-status' : '')} style={{ width: size, height: size }} onClick={handleClick}>
+    <div className={'avatar-wrap' + (props.hasStatus ? ' has-status' : '') + ((props.clickable && !props.hasStatus) ? ' clickable' : '')} style={{ width: size, height: size }} onClick={handleClick}>
       {avatarUrl ? (
         <img src={avatarUrl} alt={username || 'avatar'} className="avatar" style={{ width: size, height: size, objectFit: 'cover' }} />
       ) : (
@@ -1088,6 +1136,7 @@ function IconImage(props) { return <svg width={props.size||14} height={props.siz
 function IconMenu(props) { return <svg width={props.size||14} height={props.size||14} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>; }
 function IconGrid(props) { return <svg width={props.size||14} height={props.size||14} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>; }
 function IconCircleStatus(props) { return <svg width={props.size||14} height={props.size||14} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9" strokeDasharray="4 3"/><circle cx="12" cy="12" r="3" fill="currentColor" stroke="none"/></svg>; }
+function IconSearch(props) { return <svg width={props.size||14} height={props.size||14} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>; }
 function IconSmile(props) { return <svg width={props.size||18} height={props.size||18} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>; }
 function IconArrowLeft(props) { return <svg width={props.size||16} height={props.size||16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>; }
 function IconAt(props) { return <svg width={props.size||20} height={props.size||20} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="4"/><path d="M16 12v1.5a2.5 2.5 0 0 0 5 0V12a9 9 0 1 0-5.5 8.28"/></svg>; }
@@ -1110,6 +1159,14 @@ function parseHashParams() {
 
 /* ============================== AUTH SCREEN ============================== */
 function LandingPage(props) {
+  const features = [
+    { icon: IconMessage, title: 'Servers & DMs', body: 'Group hangouts and private chats, side by side, with reactions, replies, and edits.' },
+    { icon: IconPhone, title: 'Real calling', body: 'Voice and video calls, peer-to-peer, straight from any conversation.' },
+    { icon: IconCircleStatus, title: '24h statuses', body: 'Share a photo that fades after a day — a ring around your avatar shows who has one.' },
+    { icon: IconReels, title: 'Reels', body: 'Post short videos publicly or just for yourself, and scroll through what others share.' },
+    { icon: IconMic, title: 'Voice messages', body: 'Record and send a voice note in one tap when typing takes too long.' },
+    { icon: IconGrid, title: 'Make it yours', body: 'Dark, darker, light, gradients you mix yourself — even your own background image.' },
+  ];
   return (
     <div className="landing-page">
       <div className="landing-bg" aria-hidden="true">
@@ -1125,12 +1182,59 @@ function LandingPage(props) {
         </div>
       </nav>
       <div className="landing-hero">
-        <h1>Your people.<br />Your corner.<br />All in one place.</h1>
+        <div className="landing-hero-badge">Built different, on purpose</div>
+        <h1>Your people.<br />Your corner.<br /><span className="landing-shimmer">All in one place.</span></h1>
         <p>Group chats, DMs, statuses, and spaces that actually feel like yours — customizable down to the last pixel.</p>
         <div className="landing-hero-actions">
           <button type="button" className="btn-primary landing-cta" onClick={function () { props.onEnter('signup'); }}>Get started — it's free</button>
           <button type="button" className="pill-btn pill-btn-ghost" onClick={function () { props.onEnter('login'); }}>I already have an account</button>
         </div>
+      </div>
+
+      <div className="landing-preview-wrap">
+        <div className="landing-preview-window">
+          <div className="landing-preview-titlebar">
+            <span className="landing-preview-dot red" /><span className="landing-preview-dot yellow" /><span className="landing-preview-dot green" />
+          </div>
+          <div className="landing-preview-body">
+            <div className="landing-preview-sidebar">
+              <div className="landing-preview-avatar blurple" />
+              <div className="landing-preview-avatar pink" />
+              <div className="landing-preview-avatar green" />
+            </div>
+            <div className="landing-preview-chat">
+              <div className="landing-preview-msg them">
+                <span className="landing-preview-msg-author">Nova</span>
+                movie night at 9?
+              </div>
+              <div className="landing-preview-msg me">for sure, sending the link now</div>
+              <div className="landing-preview-msg them typing">
+                <span className="landing-preview-dot-typing" /><span className="landing-preview-dot-typing" /><span className="landing-preview-dot-typing" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="landing-features">
+        <h2>Everything a good hangout needs</h2>
+        <div className="landing-features-grid">
+          {features.map(function (f, i) {
+            const Icon = f.icon;
+            return (
+              <div className="landing-feature-card" key={i} style={{ animationDelay: (i * 0.08) + 's' }}>
+                <div className="landing-feature-icon"><Icon size={22} /></div>
+                <h3>{f.title}</h3>
+                <p>{f.body}</p>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      <div className="landing-footer-cta">
+        <h2>Ready to move in?</h2>
+        <button type="button" className="btn-primary landing-cta" onClick={function () { props.onEnter('signup'); }}>Create your account</button>
       </div>
     </div>
   );
@@ -1688,6 +1792,9 @@ function ChatArea(props) {
   const inputRef = useRef(null);
   const fileInputRef = useRef(null);
   const [editingId, setEditingId] = useState(null);
+  const [profilePreview, setProfilePreview] = useState(null);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const [recording, setRecording] = useState(false);
   const [recordSeconds, setRecordSeconds] = useState(0);
   const mediaRecorderRef = useRef(null);
@@ -1773,20 +1880,42 @@ function ChatArea(props) {
     );
   }
 
+  const visibleMessages = searchQuery.trim()
+    ? props.messages.filter(function (m) { return m.content && m.content.toLowerCase().indexOf(searchQuery.trim().toLowerCase()) !== -1; })
+    : props.messages;
+
   return (
     <div className="chat-area">
       <div className="chat-header">
         {props.headerIcon}
         <span>{props.title}</span>
-        {props.onStartCall && (
-          <div className="chat-header-calls">
-            <button className="icon-btn" onClick={function () { props.onStartCall('voice'); }} title="Voice call" type="button">
-              <IconPhone size={17} />
-            </button>
-            <button className="icon-btn" onClick={function () { props.onStartCall('video'); }} title="Video call" type="button">
-              <IconVideo size={17} />
-            </button>
+        {searchOpen ? (
+          <div className="chat-header-search">
+            <IconSearch size={15} />
+            <input
+              autoFocus
+              value={searchQuery}
+              onChange={function (e) { setSearchQuery(e.target.value); }}
+              placeholder="Search messages…"
+            />
+            <button type="button" className="icon-btn" onClick={function () { setSearchOpen(false); setSearchQuery(''); }}><IconX size={15} /></button>
           </div>
+        ) : (
+          <Fragment>
+            <button className="icon-btn chat-header-search-btn" onClick={function () { setSearchOpen(true); }} title="Search messages" type="button">
+              <IconSearch size={17} />
+            </button>
+            {props.onStartCall && (
+              <div className="chat-header-calls">
+                <button className="icon-btn" onClick={function () { props.onStartCall('voice'); }} title="Voice call" type="button">
+                  <IconPhone size={17} />
+                </button>
+                <button className="icon-btn" onClick={function () { props.onStartCall('video'); }} title="Video call" type="button">
+                  <IconVideo size={17} />
+                </button>
+              </div>
+            )}
+          </Fragment>
         )}
         {props.onToggleMembers && (
           <button className="icon-btn members-toggle" onClick={props.onToggleMembers} title="Toggle members" type="button">
@@ -1802,8 +1931,11 @@ function ChatArea(props) {
             <p>{props.startBody}</p>
           </div>
         )}
-        {props.messages.map(function (m, idx) {
-          const prev = props.messages[idx - 1];
+        {props.messages.length > 0 && visibleMessages.length === 0 && (
+          <p className="muted-note search-no-results">No messages match "{searchQuery}".</p>
+        )}
+        {visibleMessages.map(function (m, idx) {
+          const prev = visibleMessages[idx - 1];
           const compact = props.density === 'compact';
           const grouped = !compact && !!prev && prev.user_id === m.user_id && (new Date(m.created_at) - new Date(prev.created_at)) < 5 * 60 * 1000 && isSameDay(m.created_at, prev.created_at) && !prev.attachment_url && !m.attachment_url;
           const showDayDivider = !prev || !isSameDay(prev.created_at, m.created_at);
@@ -1816,7 +1948,22 @@ function ChatArea(props) {
             <Fragment key={m.id}>
               {showDayDivider && <div className="day-divider"><span>{dayLabel(m.created_at)}</span></div>}
               <div className={'message-row ' + (grouped ? 'grouped' : '')}>
-                {!grouped ? <Avatar username={username} avatarUrl={avatarUrl} size={38} /> : <span className="message-time-gutter">{formatTime(m.created_at)}</span>}
+                {!grouped ? (
+                  <Avatar
+                    username={username}
+                    avatarUrl={avatarUrl}
+                    size={38}
+                    hasStatus={!!(props.statusesByUser && props.statusesByUser[m.user_id])}
+                    clickable={true}
+                    onAvatarClick={function () {
+                      const st = props.statusesByUser && props.statusesByUser[m.user_id];
+                      if (st) props.onViewStatus(st);
+                      else setProfilePreview({ username: username, avatarUrl: avatarUrl });
+                    }}
+                  />
+                ) : (
+                  <span className="message-time-gutter">{formatTime(m.created_at)}</span>
+                )}
                 <div className="message-body">
                   {!grouped && (
                     <div className="message-meta">
@@ -1936,6 +2083,16 @@ function ChatArea(props) {
           </Fragment>
         )}
       </div>
+      {profilePreview && (
+        <div className="mini-profile-overlay" onClick={function () { setProfilePreview(null); }}>
+          <div className="mini-profile-card" onClick={function (e) { e.stopPropagation(); }}>
+            <Avatar username={profilePreview.username} avatarUrl={profilePreview.avatarUrl} size={64} />
+            <h4>{profilePreview.username}</h4>
+            <p className="muted-note">No active status right now.</p>
+            <button type="button" className="icon-btn" onClick={function () { setProfilePreview(null); }}><IconX size={16} /></button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -2985,6 +3142,7 @@ function SettingsModal(props) {
               </button>
             </div>
           </div>
+          <div className="build-tag-footer">Kizora {BUILD_TAG}</div>
         </div>
       )}
         </div>
@@ -4235,6 +4393,8 @@ function App() {
         <ChatArea
           {...chatProps}
           density={density}
+          statusesByUser={statusesByUser}
+          onViewStatus={setViewingStatus}
           currentUserId={profile.id}
           messageInput={messageInput}
           setMessageInput={setMessageInput}
