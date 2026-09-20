@@ -110,7 +110,7 @@ body { font-family: var(--font-body); background: var(--bg-deepest); }
 }
 
 /* ---------- Server rail ---------- */
-.server-rail { width: 72px; flex-shrink: 0; background: var(--bg-deepest); display: flex; flex-direction: column; align-items: center; padding: 12px 0; gap: 8px; border-right: 1px solid var(--border-subtle); }
+.server-rail { position: relative; z-index: 2; width: 72px; flex-shrink: 0; background: var(--bg-deepest); display: flex; flex-direction: column; align-items: center; padding: 12px 0; gap: 8px; border-right: 1px solid var(--border-subtle); }
 .rail-scroll { display: flex; flex-direction: column; gap: 8px; overflow-y: auto; width: 100%; align-items: center; padding-bottom: 8px; }
 .server-icon { position: relative; width: 48px; height: 48px; border-radius: 16px; background: var(--bg-elevated); border: none; color: var(--text-primary); display: flex; align-items: center; justify-content: center; font-size: 20px; cursor: pointer; transition: border-radius 0.15s ease, background 0.15s ease, color 0.15s ease, transform 0.15s ease; flex-shrink: 0; animation: popIn 0.3s cubic-bezier(0.34,1.56,0.64,1) both; }
 .server-icon.dim { opacity: 0.5; }
@@ -130,7 +130,7 @@ body { font-family: var(--font-body); background: var(--bg-deepest); }
 .server-icon.add-server:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
 
 /* ---------- Channel sidebar ---------- */
-.channel-sidebar { width: 240px; flex-shrink: 0; background: var(--bg-sidebar); display: flex; flex-direction: column; border-right: 1px solid var(--border-subtle); animation: slideInLeft 0.25s ease both; }
+.channel-sidebar { position: relative; z-index: 2; width: 240px; flex-shrink: 0; background: var(--bg-sidebar); display: flex; flex-direction: column; border-right: 1px solid var(--border-subtle); animation: slideInLeft 0.25s ease both; }
 .channel-sidebar.empty { align-items: center; justify-content: center; padding: 24px; }
 .empty-hint { color: var(--text-muted); text-align: center; font-size: 14px; }
 .server-header { height: 56px; flex-shrink: 0; display: flex; align-items: center; gap: 8px; padding: 0 16px; border-bottom: 1px solid var(--border-subtle); font-family: var(--font-display); font-weight: 600; font-size: 15px; }
@@ -159,7 +159,7 @@ body { font-family: var(--font-body); background: var(--bg-deepest); }
 .icon-btn:hover { background: var(--bg-hover); color: var(--text-primary); }
 
 /* ---------- Chat area ---------- */
-.chat-area { flex: 1; min-width: 0; display: flex; flex-direction: column; background: var(--bg-chat); }
+.chat-area { position: relative; z-index: 2; flex: 1; min-width: 0; display: flex; flex-direction: column; background: var(--bg-chat); }
 .chat-area.empty-state { align-items: center; justify-content: center; gap: 8px; color: var(--text-muted); text-align: center; }
 .chat-area.empty-state svg { animation: popIn 0.4s cubic-bezier(0.34,1.56,0.64,1) both; }
 .chat-area.empty-state h2 { font-family: var(--font-display); color: var(--text-primary); margin: 8px 0 0; }
@@ -193,7 +193,7 @@ body { font-family: var(--font-body); background: var(--bg-deepest); }
 .message-time { font-size: 11px; color: var(--text-muted); }
 .message-content { font-size: 14.5px; line-height: 1.5; color: var(--text-secondary); white-space: pre-wrap; word-break: break-word; }
 
-.message-input-area { flex-shrink: 0; display: flex; align-items: flex-end; gap: 10px; margin: 8px 20px 18px; background: var(--bg-elevated); border-radius: var(--radius-md); padding: 10px 10px 10px 16px; border: 1px solid var(--border-subtle); transition: border-color 0.15s ease; }
+.message-input-area { position: relative; z-index: 2; flex-shrink: 0; display: flex; align-items: flex-end; gap: 10px; margin: 8px 20px 18px; background: var(--bg-elevated); border-radius: var(--radius-md); padding: 10px 10px 10px 16px; border: 1px solid var(--border-subtle); transition: border-color 0.15s ease; }
 .message-input-area:focus-within { border-color: var(--accent); }
 .message-input-area textarea { flex: 1; min-width: 0; background: transparent; border: none; outline: none; resize: none; color: var(--text-primary); font-family: var(--font-body); font-size: 14.5px; line-height: 1.4; max-height: 140px; padding: 6px 0; }
 .message-input-area textarea::placeholder { color: var(--text-muted); }
@@ -203,7 +203,7 @@ body { font-family: var(--font-body); background: var(--bg-deepest); }
 .send-btn:not(:disabled):active { transform: scale(0.9); }
 
 /* ---------- Member sidebar ---------- */
-.member-sidebar { width: 240px; flex-shrink: 0; background: var(--bg-sidebar); border-left: 1px solid var(--border-subtle); overflow-y: auto; padding: 16px 12px; animation: slideInRight 0.3s cubic-bezier(0.22,1,0.36,1) both; }
+.member-sidebar { position: relative; z-index: 2; width: 240px; flex-shrink: 0; background: var(--bg-sidebar); border-left: 1px solid var(--border-subtle); overflow-y: auto; padding: 16px 12px; animation: slideInRight 0.3s cubic-bezier(0.22,1,0.36,1) both; }
 .member-section { margin-bottom: 18px; }
 .member-section-label { font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-muted); padding: 0 8px 8px; }
 .member-item { display: flex; align-items: center; gap: 10px; padding: 6px 8px; border-radius: var(--radius-sm); font-size: 14px; font-weight: 500; animation: fadeIn 0.25s ease both; }
@@ -450,7 +450,7 @@ body { font-family: var(--font-body); background: var(--bg-deepest); }
 .reel-visibility-tag.private { color: var(--accent); background: var(--accent-soft); }
 .reel-picker-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; height: 180px; border-radius: var(--radius-sm); border: 1.5px dashed var(--border-subtle); background: var(--bg-deepest); color: var(--text-secondary); cursor: pointer; font-size: 13px; font-weight: 600; overflow: hidden; }
 .reel-preview-video { width: 100%; height: 100%; object-fit: cover; }
-.main-nav-rail { width: 64px; flex-shrink: 0; background: var(--bg-deepest); border-right: 1px solid var(--border-subtle); display: flex; flex-direction: column; align-items: stretch; padding: 10px 0; overflow-y: auto; }
+.main-nav-rail { position: relative; z-index: 2; width: 64px; flex-shrink: 0; background: var(--bg-deepest); border-right: 1px solid var(--border-subtle); display: flex; flex-direction: column; align-items: stretch; padding: 10px 0; overflow-y: auto; }
 .main-nav-btn { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px 2px; background: transparent; border: none; color: var(--text-muted); cursor: pointer; font-size: 9.5px; font-weight: 600; font-family: var(--font-body); transition: color 0.15s, background 0.15s; }
 .main-nav-btn:hover { color: var(--text-primary); background: var(--bg-hover); }
 .call-history-list { display: flex; flex-direction: column; gap: 2px; max-height: 360px; overflow-y: auto; }
@@ -627,6 +627,8 @@ body { font-family: var(--font-body); background: var(--bg-deepest); }
 .status-viewer-close { background: rgba(0,0,0,0.4); border: none; color: #fff; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
 .status-viewer-media { flex: 1; display: flex; align-items: center; justify-content: center; background: #000; }
 .status-viewer-media img { max-width: 100%; max-height: 100%; object-fit: contain; }
+.status-viewer-media video { max-width: 100%; max-height: 100%; object-fit: contain; }
+.status-viewer-progress-fill.paused { animation: none; width: 100%; }
 .status-viewer-caption { padding: 12px 16px; color: #fff; font-size: 14px; background: rgba(0,0,0,0.5); }
 .status-upload-modal .avatar-upload-hint { color: var(--text-muted); font-size: 12.5px; }
 .accent-swatch:hover { transform: scale(1.1); }
@@ -1423,7 +1425,7 @@ function StatusFeedModal(props) {
               </span>
               <div className="call-history-text">
                 <span className="call-history-name">{author && author.username}</span>
-                <span className="call-history-meta">{s.caption || 'Tap to view'}</span>
+                <span className="call-history-meta">{s.media_type === 'video' ? 'Video · ' : ''}{s.caption || 'Tap to view'}</span>
               </div>
             </button>
           );
@@ -1458,7 +1460,7 @@ function ArchiveModal(props) {
         {archivedServersList.map(function (s) {
           return (
             <div className="call-history-row" key={s.id}>
-              {s.icon_url ? <img src={s.icon_url} className="server-icon-img" style={{ width: 30, height: 30, borderRadius: 8 }} alt={s.name} /> : <span className="server-icon-preview" style={{ width: 30, height: 30, fontSize: 13, borderRadius: 8 }}>{s.name.slice(0, 1).toUpperCase()}</span>}
+              {s.icon_url ? <img src={s.icon_url} className="server-icon-img" style={{ width: 30, height: 30, borderRadius: 8 }} alt={s.name} /> : <span className="server-icon-preview" style={{ width: 30, height: 30, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Logo size={16} /></span>}
               <span className="call-history-name" style={{ flex: 1 }}>{s.name}</span>
               <button type="button" className="btn-secondary" onClick={function () { props.onUnarchiveServer(s.id); }}>Unarchive</button>
             </div>
@@ -1576,7 +1578,7 @@ function ServerRail(props) {
                 title={s.name}
               >
                 {active && <span className="rail-pill" />}
-                {s.icon_url ? <img src={s.icon_url} alt={s.name} className="server-icon-img" /> : <span>{s.emoji || s.name.slice(0, 1).toUpperCase()}</span>}
+                {s.icon_url ? <img src={s.icon_url} alt={s.name} className="server-icon-img" /> : <Logo size={22} />}
               </button>
               {contextMenuFor === s.id && (
                 <div className="rail-context-menu" onClick={function (e) { e.stopPropagation(); }}>
@@ -1597,7 +1599,7 @@ function ServerRail(props) {
           return (
             <div key={s.id} className="server-icon-wrap">
               <button type="button" className="server-icon dim" title={s.name + ' (archived)'} onClick={function () { props.onSelect(s.id); }}>
-                {s.icon_url ? <img src={s.icon_url} alt={s.name} className="server-icon-img" /> : <span>{s.emoji || s.name.slice(0, 1).toUpperCase()}</span>}
+                {s.icon_url ? <img src={s.icon_url} alt={s.name} className="server-icon-img" /> : <Logo size={22} />}
               </button>
               <div className="rail-context-menu rail-context-static">
                 <button type="button" onClick={function () { props.onArchiveServer(s.id); }}>
@@ -2494,7 +2496,7 @@ function ServerSettingsModal(props) {
             disabled={!props.canEditIcon}
             title={props.canEditIcon ? 'Change server icon' : 'You do not have permission to change this icon'}
           >
-            {iconPreview ? <img src={iconPreview} alt="Server icon" /> : <span className="server-icon-preview">{fallbackLetter}</span>}
+            {iconPreview ? <img src={iconPreview} alt="Server icon" /> : <span className="server-icon-preview"><Logo size={24} /></span>}
             {props.canEditIcon && <span className="server-icon-edit-badge"><IconCamera size={12} /></span>}
           </button>
           <span className="avatar-upload-hint">
@@ -2594,8 +2596,8 @@ function AddServerModal(props) {
       ) : (
         <form onSubmit={handleCreate} className="create-server-form">
           <div className="server-icon-preview-row">
-            <div className="server-icon-preview">{previewIcon}</div>
-            <span className="avatar-upload-hint">Your server's icon is generated from its first letter.</span>
+            <div className="server-icon-preview"><Logo size={22} /></div>
+            <span className="avatar-upload-hint">No icon uploaded yet — the Kizora logo is shown until you add one.</span>
           </div>
           <label className="field">
             <span>Server name</span>
@@ -2735,7 +2737,9 @@ function maybeNotifyForMessages(freshMessages, myUserId, contextLabel) {
 
 function StatusViewerModal(props) {
   const status = props.status;
+  const isVideo = status && status.media_type === 'video';
   useEffect(function () {
+    if (isVideo) return undefined;
     const t = setTimeout(props.onClose, 5000);
     return function () { clearTimeout(t); };
   }, [status && status.id]);
@@ -2744,7 +2748,7 @@ function StatusViewerModal(props) {
   return (
     <div className="status-viewer-overlay" onClick={props.onClose}>
       <div className="status-viewer-card" onClick={function (e) { e.stopPropagation(); }}>
-        <div className="status-viewer-progress"><div className="status-viewer-progress-fill" key={status.id} /></div>
+        <div className="status-viewer-progress"><div className={'status-viewer-progress-fill' + (isVideo ? ' paused' : '')} key={status.id} /></div>
         <div className="status-viewer-header">
           <div className="status-viewer-user">
             <Avatar username={author && author.username} avatarUrl={author && author.avatar_url} size={26} />
@@ -2753,7 +2757,11 @@ function StatusViewerModal(props) {
           <button type="button" className="status-viewer-close" onClick={props.onClose}><IconX size={16} /></button>
         </div>
         <div className="status-viewer-media">
-          <img src={status.media_url} alt="Status" />
+          {isVideo ? (
+            <video src={status.media_url} autoPlay controls onEnded={props.onClose} />
+          ) : (
+            <img src={status.media_url} alt="Status" />
+          )}
         </div>
         {status.caption && <div className="status-viewer-caption">{status.caption}</div>}
       </div>
@@ -2764,6 +2772,7 @@ function StatusViewerModal(props) {
 function StatusUploadModal(props) {
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState(null);
+  const [mediaType, setMediaType] = useState('image');
   const [caption, setCaption] = useState('');
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
@@ -2772,18 +2781,38 @@ function StatusUploadModal(props) {
   function handlePick(e) {
     const f = e.target.files && e.target.files[0];
     if (!f) return;
-    if (f.size > 15 * 1024 * 1024) { setError('Images must be under 15MB.'); return; }
-    setError('');
-    setFile(f);
-    const reader = new FileReader();
-    reader.onload = function () { setPreview(reader.result); };
-    reader.readAsDataURL(f);
+    if (f.size > 50 * 1024 * 1024) { setError('File must be under 50MB.'); return; }
+    const isVideo = f.type.indexOf('video/') === 0;
+    if (!isVideo) {
+      setError('');
+      setMediaType('image');
+      setFile(f);
+      const reader = new FileReader();
+      reader.onload = function () { setPreview(reader.result); };
+      reader.readAsDataURL(f);
+      return;
+    }
+    const url = URL.createObjectURL(f);
+    const probe = document.createElement('video');
+    probe.preload = 'metadata';
+    probe.onloadedmetadata = function () {
+      if (probe.duration > 61) {
+        setError('Status videos must be 1 minute or shorter (this one is ' + Math.round(probe.duration) + 's).');
+        URL.revokeObjectURL(url);
+        return;
+      }
+      setError('');
+      setMediaType('video');
+      setFile(f);
+      setPreview(url);
+    };
+    probe.src = url;
   }
 
   function handleSubmit(e) {
     e.preventDefault();
-    if (!file) { setError('Choose a photo first.'); return; }
-    props.onPost(file, caption, setError, setBusy, props.onClose);
+    if (!file) { setError('Choose a photo or video first.'); return; }
+    props.onPost(file, caption, mediaType, setError, setBusy, props.onClose);
   }
 
   return (
@@ -2792,15 +2821,19 @@ function StatusUploadModal(props) {
         <div className="avatar-upload-row">
           <button type="button" className="avatar-upload-btn" onClick={function () { fileInputRef.current && fileInputRef.current.click(); }} style={{ width: 100, height: 100, borderRadius: 12 }}>
             {preview ? (
-              <img src={preview} alt="Preview" style={{ width: 100, height: 100, objectFit: 'cover', borderRadius: 12 }} />
+              mediaType === 'video' ? (
+                <video src={preview} muted style={{ width: 100, height: 100, objectFit: 'cover', borderRadius: 12 }} />
+              ) : (
+                <img src={preview} alt="Preview" style={{ width: 100, height: 100, objectFit: 'cover', borderRadius: 12 }} />
+              )
             ) : (
               <div style={{ width: 100, height: 100, borderRadius: 12, background: 'var(--bg-deepest)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <IconCamera size={22} />
               </div>
             )}
           </button>
-          <input ref={fileInputRef} type="file" accept="image/png,image/jpeg,image/gif,image/webp" style={{ display: 'none' }} onChange={handlePick} />
-          <span className="avatar-upload-hint">A photo you post here is visible to everyone for 24 hours, then it disappears.</span>
+          <input ref={fileInputRef} type="file" accept="image/png,image/jpeg,image/gif,image/webp,video/mp4,video/webm,video/quicktime" style={{ display: 'none' }} onChange={handlePick} />
+          <span className="avatar-upload-hint">A photo or video (up to 1 minute) you post here is visible to everyone for 24 hours, then it disappears.</span>
         </div>
         <label className="field">
           <span>Caption (optional)</span>
@@ -3171,7 +3204,7 @@ function App() {
     let cancelled = false;
     async function loadStatuses() {
       try {
-        const data = await sbFetch('/rest/v1/statuses?expires_at=gt.' + encodeURIComponent(new Date().toISOString()) + '&select=id,user_id,media_url,caption,created_at,profiles(username,avatar_url)&order=created_at.desc', { token: session.access_token });
+        const data = await sbFetch('/rest/v1/statuses?expires_at=gt.' + encodeURIComponent(new Date().toISOString()) + '&select=id,user_id,media_url,media_type,caption,created_at,profiles(username,avatar_url)&order=created_at.desc', { token: session.access_token });
         if (cancelled) return;
         const byUser = {};
         (data || []).forEach(function (s) { if (!byUser[s.user_id]) byUser[s.user_id] = s; });
@@ -3183,7 +3216,7 @@ function App() {
     return function () { cancelled = true; clearInterval(interval); };
   }, [session]);
 
-  async function handlePostStatus(file, caption, setError, setBusy, onDone) {
+  async function handlePostStatus(file, caption, mediaType, setError, setBusy, onDone) {
     setBusy(true);
     try {
       const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
@@ -3191,7 +3224,7 @@ function App() {
       const media_url = await uploadToStorage('statuses', path, file, session.access_token);
       const created = await sbFetch('/rest/v1/statuses', {
         method: 'POST', token: session.access_token,
-        body: { user_id: profile.id, media_url: media_url, caption: caption || null },
+        body: { user_id: profile.id, media_url: media_url, media_type: mediaType || 'image', caption: caption || null },
         extraHeaders: { Prefer: 'return=representation' },
       });
       setStatusesByUser(function (prev) {
