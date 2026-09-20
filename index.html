@@ -192,6 +192,9 @@ body { font-family: var(--font-body); background: var(--bg-deepest); }
 .message-author { font-weight: 600; font-size: 14.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; max-width: 60%; }
 .message-time { font-size: 11px; color: var(--text-muted); }
 .message-content { font-size: 14.5px; line-height: 1.5; color: var(--text-secondary); white-space: pre-wrap; word-break: break-word; }
+.inline-code { background: var(--bg-deepest); border: 1px solid var(--border-subtle); border-radius: 4px; padding: 1px 5px; font-family: 'SFMono-Regular', Consolas, monospace; font-size: 13px; color: var(--accent); }
+.message-link { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; word-break: break-all; }
+.message-blockquote { border-left: 3px solid var(--border-subtle); padding-left: 10px; margin: 3px 0; color: var(--text-muted); }
 
 .message-input-area { position: relative; z-index: 2; flex-shrink: 0; display: flex; align-items: flex-end; gap: 10px; margin: 8px 20px 18px; background: var(--bg-elevated); border-radius: var(--radius-md); padding: 10px 10px 10px 16px; border: 1px solid var(--border-subtle); transition: border-color 0.15s ease; }
 .message-input-area:focus-within { border-color: var(--accent); }
@@ -529,6 +532,15 @@ body { font-family: var(--font-body); background: var(--bg-deepest); }
 .emoji-picker-popover { position: absolute; bottom: 46px; left: 0; width: 260px; max-height: 220px; overflow-y: auto; background: var(--bg-elevated); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 10px; display: flex; flex-wrap: wrap; gap: 4px; box-shadow: 0 8px 24px rgba(0,0,0,0.3); z-index: 20; animation: modalIn 0.15s ease both; }
 .emoji-picker-popover button { width: 32px; height: 32px; border-radius: 8px; border: none; background: transparent; font-size: 18px; cursor: pointer; }
 .emoji-picker-popover button:hover { background: var(--bg-hover); }
+.message-reactions-row { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 4px; }
+.reaction-pill { display: flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 999px; background: var(--bg-hover); border: 1px solid transparent; cursor: pointer; font-size: 12.5px; color: var(--text-secondary); }
+.reaction-pill:hover { border-color: var(--border-subtle); }
+.reaction-pill.mine { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+.reaction-count { font-weight: 700; font-size: 11px; }
+.reaction-picker-wrap { position: relative; display: flex; }
+.reaction-picker-popover { position: absolute; bottom: 26px; left: 0; display: flex; gap: 2px; background: var(--bg-elevated); border: 1px solid var(--border-subtle); border-radius: 999px; padding: 5px 6px; box-shadow: 0 8px 24px rgba(0,0,0,0.3); z-index: 20; animation: modalIn 0.15s ease both; }
+.reaction-picker-popover button { width: 26px; height: 26px; border-radius: 50%; border: none; background: transparent; font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.reaction-picker-popover button:hover { background: var(--bg-hover); }
 
 /* ---------- Direct messages ---------- */
 .dm-list { flex: 1; overflow-y: auto; padding: 12px 8px; }
@@ -877,7 +889,7 @@ function randomId() {
 /* ---------- Rich text: **bold**, *italic*, ==highlight== -> safe React nodes (never raw HTML) ---------- */
 function parseFormatting(text) {
   if (!text) return text;
-  const pattern = /\*\*(.+?)\*\*|\*(.+?)\*|==(.+?)==/;
+  const pattern = /\*\*(.+?)\*\*|\*(.+?)\*|==(.+?)==|`([^`]+?)`|(https?:\/\/[^\s]+)/;
   const parts = [];
   let remaining = text;
   let key = 0;
@@ -891,10 +903,26 @@ function parseFormatting(text) {
     if (match[1] !== undefined) parts.push(<strong key={key++}>{match[1]}</strong>);
     else if (match[2] !== undefined) parts.push(<em key={key++}>{match[2]}</em>);
     else if (match[3] !== undefined) parts.push(<mark key={key++}>{match[3]}</mark>);
+    else if (match[4] !== undefined) parts.push(<code key={key++} className="inline-code">{match[4]}</code>);
+    else if (match[5] !== undefined) parts.push(<a key={key++} href={match[5]} target="_blank" rel="noopener noreferrer" className="message-link">{match[5]}</a>);
     remaining = remaining.slice(idx + match[0].length);
   }
   if (remaining.length > 0 && guard >= 500) parts.push(remaining);
   return parts;
+}
+
+function renderMessageContent(text) {
+  if (!text) return null;
+  const lines = text.split('\n');
+  return lines.map(function (line, i) {
+    const isQuote = line.startsWith('> ');
+    const body = isQuote ? line.slice(2) : line;
+    const rendered = parseFormatting(body);
+    if (isQuote) {
+      return <div key={i} className="message-blockquote">{rendered}</div>;
+    }
+    return <Fragment key={i}>{rendered}{i < lines.length - 1 ? <br /> : null}</Fragment>;
+  });
 }
 
 const EMOJI_PICKER_SET = ['😀','😂','😅','😊','😍','🥰','😎','🤔','😭','😡','👍','👎','👏','🙏','💪','🔥','✨','🎉','❤️','💯','😴','🤯','🥳','😇','👀','🤝','💀','🫡','😤','🙃','😏','🥲','😱','🤗','🫶','👋','🎮','🎧','☕','🌙'];
@@ -920,6 +948,15 @@ const ACTIVITIES = [
   { id: 'coding', name: 'Coding' },
   { id: 'music', name: 'Music' },
 ];
+
+function groupReactions(list) {
+  const groups = {};
+  (list || []).forEach(function (r) {
+    if (!groups[r.emoji]) groups[r.emoji] = [];
+    groups[r.emoji].push(r.user_id);
+  });
+  return groups;
+}
 
 function normalizedPair(a, b) {
   return a < b ? [a, b] : [b, a];
@@ -1790,6 +1827,49 @@ function EmojiPickerButton(props) {
   );
 }
 
+const QUICK_REACTIONS = ['👍','❤️','😂','😮','😢','🔥'];
+
+function MessageReactionsRow(props) {
+  return (
+    <div className="message-reactions-row">
+      {Object.keys(props.groups).map(function (emoji) {
+        const users = props.groups[emoji];
+        const mine = users.indexOf(props.myId) !== -1;
+        return (
+          <button
+            key={emoji}
+            type="button"
+            className={'reaction-pill' + (mine ? ' mine' : '')}
+            onClick={function () { props.onToggle(emoji); }}
+            title={users.length + (users.length === 1 ? ' reaction' : ' reactions')}
+          >
+            <span>{emoji}</span>
+            <span className="reaction-count">{users.length}</span>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+function ReactionPickerButton(props) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="reaction-picker-wrap">
+      <button type="button" title="Add reaction" onClick={function () { setOpen(function (v) { return !v; }); }}>
+        <IconSmile size={14} />
+      </button>
+      {open && (
+        <div className="reaction-picker-popover">
+          {QUICK_REACTIONS.map(function (em, i) {
+            return <button key={i} type="button" onClick={function () { props.onPick(em); setOpen(false); }}>{em}</button>;
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function ChatArea(props) {
   const inputRef = useRef(null);
   const fileInputRef = useRef(null);
@@ -1994,7 +2074,7 @@ function ChatArea(props) {
                     />
                   ) : (
                     <Fragment>
-                      {m.content && <div className="message-content">{parseFormatting(m.content)}{m.edited_at && grouped && <span className="message-edited-tag">(edited)</span>}</div>}
+                      {m.content && <div className="message-content">{renderMessageContent(m.content)}{m.edited_at && grouped && <span className="message-edited-tag">(edited)</span>}</div>}
                       {m.attachment_url && (
                         <div className="message-attachment">
                           {isImage ? (
@@ -2014,9 +2094,17 @@ function ChatArea(props) {
                       )}
                     </Fragment>
                   )}
+                  {props.reactionsByMessage && props.reactionsByMessage[m.id] && props.reactionsByMessage[m.id].length > 0 && (
+                    <MessageReactionsRow
+                      groups={groupReactions(props.reactionsByMessage[m.id])}
+                      myId={props.currentUserId}
+                      onToggle={function (emoji) { props.onToggleReaction(m.id, emoji); }}
+                    />
+                  )}
                 </div>
                 {!isEditing && (
                   <div className="message-actions">
+                    <ReactionPickerButton onPick={function (emoji) { props.onToggleReaction(m.id, emoji); }} />
                     <button type="button" title="Reply" onClick={function () { props.onReply({ id: m.id, content: m.content, authorName: username }); }}><IconReply size={14} /></button>
                     <button type="button" title="Forward" onClick={function () { props.onForward(m); }}><IconForward size={14} /></button>
                     <button type="button" title={props.isStarred(m.id) ? 'Unstar' : 'Star'} onClick={function () { props.onToggleStar(m.id); }}>
@@ -3312,6 +3400,30 @@ function App() {
     } catch (e) { return new Set(); }
   });
   const [starredMsgIds, setStarredMsgIds] = useState(new Set());
+  const [reactionsByMessage, setReactionsByMessage] = useState({});
+  const [dmReactionsByMessage, setDmReactionsByMessage] = useState({});
+
+  async function toggleReaction(messageId, emoji, isDm) {
+    const table = isDm ? 'dm_message_reactions' : 'message_reactions';
+    const setState = isDm ? setDmReactionsByMessage : setReactionsByMessage;
+    const existing = (isDm ? dmReactionsByMessage : reactionsByMessage)[messageId] || [];
+    const mine = existing.find(function (r) { return r.user_id === profile.id && r.emoji === emoji; });
+    setState(function (prev) {
+      const list = prev[messageId] || [];
+      const next = mine
+        ? list.filter(function (r) { return !(r.user_id === profile.id && r.emoji === emoji); })
+        : list.concat([{ user_id: profile.id, emoji: emoji }]);
+      return Object.assign({}, prev, { [messageId]: next });
+    });
+    try {
+      if (mine) {
+        await sbFetch('/rest/v1/' + table + '?message_id=eq.' + messageId + '&user_id=eq.' + profile.id + '&emoji=eq.' + encodeURIComponent(emoji), { method: 'DELETE', token: session.access_token, extraHeaders: { Prefer: 'return=minimal' } });
+      } else {
+        await sbFetch('/rest/v1/' + table, { method: 'POST', token: session.access_token, body: { message_id: messageId, user_id: profile.id, emoji: emoji }, extraHeaders: { Prefer: 'return=minimal' } });
+      }
+    } catch (e) { /* best-effort, will resync on next poll */ }
+  }
+
   const [starredDmIds, setStarredDmIds] = useState(new Set());
   const [showForwardFor, setShowForwardFor] = useState(null);
   const [showStarred, setShowStarred] = useState(false);
@@ -4007,6 +4119,26 @@ function App() {
     return function () { cancelled = true; clearInterval(interval); };
   }, [currentDmThreadId, session]);
 
+  useEffect(function () {
+    if (!currentDmThreadId || !session) { setDmReactionsByMessage({}); return; }
+    let cancelled = false;
+    async function loadReactions() {
+      try {
+        const data = await sbFetch('/rest/v1/dm_message_reactions?select=message_id,user_id,emoji,dm_messages!inner(thread_id)&dm_messages.thread_id=eq.' + currentDmThreadId, { token: session.access_token });
+        if (cancelled) return;
+        const byMsg = {};
+        (data || []).forEach(function (r) {
+          if (!byMsg[r.message_id]) byMsg[r.message_id] = [];
+          byMsg[r.message_id].push({ user_id: r.user_id, emoji: r.emoji });
+        });
+        setDmReactionsByMessage(byMsg);
+      } catch (e) { /* transient */ }
+    }
+    loadReactions();
+    const interval = setInterval(loadReactions, 4000);
+    return function () { cancelled = true; clearInterval(interval); };
+  }, [currentDmThreadId, session]);
+
   async function handleSendDm() {
     const content = messageInput.trim();
     if ((!content && !stagedFile) || !currentDmThreadId || !profile) return;
@@ -4151,6 +4283,26 @@ function App() {
     loadInitial();
     const interval = setInterval(pollNew, 2000);
     return function () { cancelled = true; clearInterval(interval); };
+  }, [currentChannelId, session]);
+
+  useEffect(function () {
+    if (!currentChannelId || !session) { setReactionsByMessage({}); return; }
+    let cancelled = false;
+    async function loadReactions() {
+      try {
+        const data = await sbFetch('/rest/v1/message_reactions?select=message_id,user_id,emoji,messages!inner(channel_id)&messages.channel_id=eq.' + currentChannelId, { token: session.access_token });
+        if (cancelled) return;
+        const byMsg = {};
+        (data || []).forEach(function (r) {
+          if (!byMsg[r.message_id]) byMsg[r.message_id] = [];
+          byMsg[r.message_id].push({ user_id: r.user_id, emoji: r.emoji });
+        });
+        setReactionsByMessage(byMsg);
+      } catch (e) { /* transient */ }
+    }
+    loadReactions();
+    const interval2 = setInterval(loadReactions, 4000);
+    return function () { cancelled = true; clearInterval(interval2); };
   }, [currentChannelId, session]);
 
   useEffect(function () {
@@ -4377,6 +4529,8 @@ function App() {
           isStarred: function (id) { return starredDmIds.has(id); },
           onToggleStar: function (id) { toggleStarMessage(id, true); },
           onForward: function (m) { setShowForwardFor({ message: m, isDm: true }); },
+          reactionsByMessage: dmReactionsByMessage,
+          onToggleReaction: function (id, emoji) { toggleReaction(id, emoji, true); },
           onStartCall: dmOtherUser ? function (kind) { startCall(dmOtherUser.id, dmOtherUser.username, dmOtherUser.avatar_url, kind); } : null,
         };
       }
@@ -4400,6 +4554,8 @@ function App() {
           isStarred: function (id) { return starredMsgIds.has(id); },
           onToggleStar: function (id) { toggleStarMessage(id, false); },
           onForward: function (m) { setShowForwardFor({ message: m, isDm: false }); },
+          reactionsByMessage: reactionsByMessage,
+          onToggleReaction: function (id, emoji) { toggleReaction(id, emoji, false); },
         };
       }
     }
