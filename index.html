@@ -75,11 +75,12 @@ body { font-family: var(--font-body); background: var(--bg-deepest); }
 .app-bg-blob-a { width: 420px; height: 420px; background: #5865F2; top: -100px; left: 10%; animation: blobDrift1 16s ease-in-out infinite; }
 .app-bg-blob-b { width: 360px; height: 360px; background: #F28ED0; bottom: -100px; right: 8%; animation: blobDrift2 19s ease-in-out infinite; }
 .app { position: relative; z-index: 1; display: flex; overflow: hidden; background: transparent; }
-.app[data-bg="space"] .server-rail, .app[data-bg="custom"] .server-rail { background: color-mix(in srgb, var(--bg-deepest) 55%, transparent); backdrop-filter: blur(6px); }
-.app[data-bg="space"] .channel-sidebar, .app[data-bg="custom"] .channel-sidebar { background: color-mix(in srgb, var(--bg-sidebar) 55%, transparent); backdrop-filter: blur(6px); }
-.app[data-bg="space"] .member-sidebar, .app[data-bg="custom"] .member-sidebar { background: color-mix(in srgb, var(--bg-sidebar) 55%, transparent); backdrop-filter: blur(6px); }
-.app[data-bg="space"] .chat-area, .app[data-bg="custom"] .chat-area { background: color-mix(in srgb, var(--bg-chat) 68%, transparent); }
-.app[data-bg="space"] .chat-header, .app[data-bg="custom"] .chat-header { background: color-mix(in srgb, var(--bg-chat) 88%, transparent); backdrop-filter: blur(6px); }
+html:not([data-theme="light"]) .app[data-bg="space"] .server-rail, html:not([data-theme="light"]) .app[data-bg="custom"] .server-rail { background: color-mix(in srgb, var(--bg-deepest) 55%, transparent); backdrop-filter: blur(6px); }
+html:not([data-theme="light"]) .app[data-bg="space"] .channel-sidebar, html:not([data-theme="light"]) .app[data-bg="custom"] .channel-sidebar { background: color-mix(in srgb, var(--bg-sidebar) 55%, transparent); backdrop-filter: blur(6px); }
+html:not([data-theme="light"]) .app[data-bg="space"] .member-sidebar, html:not([data-theme="light"]) .app[data-bg="custom"] .member-sidebar { background: color-mix(in srgb, var(--bg-sidebar) 55%, transparent); backdrop-filter: blur(6px); }
+html:not([data-theme="light"]) .app[data-bg="space"] .chat-area, html:not([data-theme="light"]) .app[data-bg="custom"] .chat-area { background: color-mix(in srgb, var(--bg-chat) 68%, transparent); }
+html:not([data-theme="light"]) .app[data-bg="space"] .chat-header, html:not([data-theme="light"]) .app[data-bg="custom"] .chat-header { background: color-mix(in srgb, var(--bg-chat) 88%, transparent); backdrop-filter: blur(6px); }
+html[data-theme="light"] .app-bg-layer { opacity: 0.35; }
 .bg-option-row { display: flex; gap: 10px; flex-wrap: wrap; }
 .bg-option-card { width: 76px; height: 54px; border-radius: 10px; border: 2px solid var(--border-subtle); cursor: pointer; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 10px; font-weight: 700; }
 .bg-option-card.active { border-color: var(--accent); }
@@ -505,6 +506,10 @@ body { font-family: var(--font-body); background: var(--bg-deepest); }
 .call-action-btn:hover { color: var(--text-primary); background: var(--bg-hover); }
 .chat-header-calls { display: flex; align-items: center; gap: 4px; margin-left: auto; }
 .chat-header-calls + .members-toggle { margin-left: 4px; }
+.header-call-btn { width: 32px; height: 32px; border-radius: 50%; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #fff; transition: transform 0.12s, filter 0.12s; }
+.header-call-btn:hover { transform: scale(1.08); filter: brightness(1.1); }
+.header-call-btn.voice { background: #2FB463; }
+.header-call-btn.video { background: var(--accent-bg); color: #1a1508; }
 .chat-header-search-btn { margin-left: auto; }
 .chat-header-search { display: flex; align-items: center; gap: 8px; flex: 1; margin-left: 12px; background: var(--bg-deepest); border: 1px solid var(--border-subtle); border-radius: 999px; padding: 6px 12px; color: var(--text-muted); }
 .chat-header-search input { flex: 1; background: transparent; border: none; outline: none; color: var(--text-primary); font-size: 13.5px; font-family: var(--font-body); }
@@ -1989,11 +1994,11 @@ function ChatArea(props) {
             </button>
             {props.onStartCall && (
               <div className="chat-header-calls">
-                <button className="icon-btn" onClick={function () { props.onStartCall('voice'); }} title="Voice call" type="button">
-                  <IconPhone size={17} />
+                <button className="header-call-btn voice" onClick={function () { props.onStartCall('voice'); }} title="Voice call" type="button">
+                  <IconPhone size={16} />
                 </button>
-                <button className="icon-btn" onClick={function () { props.onStartCall('video'); }} title="Video call" type="button">
-                  <IconVideo size={17} />
+                <button className="header-call-btn video" onClick={function () { props.onStartCall('video'); }} title="Video call" type="button">
+                  <IconVideo size={16} />
                 </button>
               </div>
             )}
@@ -2797,6 +2802,42 @@ function playNotifySound() {
   } catch (e) {}
 }
 
+const RingtonePlayer = {
+  ctx: null,
+  timer: null,
+  start: function () {
+    this.stop();
+    try {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      this.ctx = new AudioCtx();
+      const ring = function (ctx) {
+        const now = ctx.currentTime;
+        [0, 0.45].forEach(function (offset) {
+          const osc1 = ctx.createOscillator();
+          const osc2 = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc1.type = 'sine'; osc1.frequency.value = 480;
+          osc2.type = 'sine'; osc2.frequency.value = 620;
+          gain.gain.setValueAtTime(0.0001, now + offset);
+          gain.gain.exponentialRampToValueAtTime(0.35, now + offset + 0.05);
+          gain.gain.setValueAtTime(0.35, now + offset + 0.35);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + offset + 0.4);
+          osc1.connect(gain); osc2.connect(gain); gain.connect(ctx.destination);
+          osc1.start(now + offset); osc2.start(now + offset);
+          osc1.stop(now + offset + 0.42); osc2.stop(now + offset + 0.42);
+        });
+      };
+      const self = this;
+      ring(this.ctx);
+      this.timer = setInterval(function () { if (self.ctx) ring(self.ctx); }, 2000);
+    } catch (e) {}
+  },
+  stop: function () {
+    if (this.timer) { clearInterval(this.timer); this.timer = null; }
+    if (this.ctx) { try { this.ctx.close(); } catch (e) {} this.ctx = null; }
+  },
+};
+
 function maybeNotifyForMessages(freshMessages, myUserId, contextLabel) {
   if (!freshMessages || !freshMessages.length) return;
   const others = freshMessages.filter(function (m) { return m.user_id !== myUserId && m.sender_id !== myUserId; });
@@ -3460,6 +3501,15 @@ function App() {
   const iceQueueRef = useRef([]);
   const remoteDescSetRef = useRef(false);
   const callStartTimeRef = useRef(null);
+
+  useEffect(function () {
+    if (incomingCall) {
+      RingtonePlayer.start();
+    } else {
+      RingtonePlayer.stop();
+    }
+    return function () { RingtonePlayer.stop(); };
+  }, [incomingCall && incomingCall.callId]);
 
   function cleanupCall() {
     if (pcRef.current) { try { pcRef.current.close(); } catch (e) {} pcRef.current = null; }
